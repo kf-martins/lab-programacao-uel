@@ -1,0 +1,13 @@
+$kind: http-request
+name: 2 - GET /contatos - listar contatos
+url: "{{baseUrl}}/contatos"
+method: GET
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Lista retornada (HTTP 200)', function () { pm.response.to.have.status(200); });
+      pm.test('Resposta é um array', function () { pm.expect(pm.response.json()).to.be.an('array'); });
+      pm.test('Lista não está vazia', function () { pm.expect(pm.response.json().length).to.be.greaterThan(0); });
+    language: text/javascript
+settings: {}
+order: 2000

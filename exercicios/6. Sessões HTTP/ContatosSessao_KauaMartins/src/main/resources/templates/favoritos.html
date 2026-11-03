@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Meus favoritos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-body-tertiary">
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+        <a class="navbar-brand" th:href="@{/contatos}">Contatos</a>
+        <div class="d-flex align-items-center gap-3">
+            <span class="navbar-text text-white" th:text="|Olá, ${usuario.nome}!|">Olá!</span>
+            <a class="btn btn-outline-light btn-sm" th:href="@{/contatos}">Todos os contatos</a>
+            <a class="btn btn-light btn-sm" th:href="@{/logout}">Sair</a>
+        </div>
+    </div>
+</nav>
+
+<main class="container py-4">
+    <h1 class="h3 mb-1">Meus contatos favoritos</h1>
+    <p class="text-secondary mb-3">Esta lista pertence à sessão HTTP atual.</p>
+
+    <div class="card border-0 shadow-sm">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                <tr>
+                    <th>Nome</th>
+                    <th>Telefone</th>
+                    <th>E-mail</th>
+                    <th>Endereço</th>
+                    <th>Nascimento</th>
+                    <th class="text-end">Ação</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="contato : ${contatos}">
+                    <td class="fw-semibold" th:text="${contato.nome}">Nome</td>
+                    <td th:text="${contato.telefone}">Telefone</td>
+                    <td th:text="${contato.email}">E-mail</td>
+                    <td th:text="${contato.endereco != null ? contato.endereco : '-'}">Endereço</td>
+                    <td th:text="${contato.dataNascimento != null ? #temporals.format(contato.dataNascimento, 'dd/MM/yyyy') : '-'}">Data</td>
+                    <td class="text-end">
+                        <form th:action="@{/contatos/{id}/favoritar(id=${contato.id})}" method="post">
+                            <button type="submit" class="btn btn-sm btn-outline-warning">Desfavoritar</button>
+                        </form>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(contatos)}">
+                    <td colspan="6" class="text-center text-secondary py-4">Você ainda não favoritou nenhum contato.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+</body>
+</html>

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Relatório de Testes - Persistência de Dados</title>
+    <style>
+        @page { margin: 0; }
+        *, *::before, *::after { box-sizing: border-box; }
+        html, body { margin: 0; padding: 0; }
+        html { background-color: #ffffff; }
+        @media (prefers-color-scheme: dark) {
+            html { background-color: #1f1f1f; }
+        }
+        body {
+            padding: 24px 0;
+            margin: 0 auto;
+            max-width: 900px !important;
+            border: none !important;
+            background: transparent !important;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: #1e293b;
+        }
+        .page {
+            height: 297mm;
+            margin: 0 auto 12px auto;
+            padding: 18mm 18mm 12mm 18mm;
+            background-color: #ffffff;
+            border: 1px solid rgba(0, 0, 0, 0.12);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+        @media screen and (max-width: 600px) {
+            body { padding: 16px 0; }
+            .page { margin: 0 auto 8px auto; border: none; padding: 12px 20px; }
+        }
+        .page-content { flex: 1 1 0; min-height: 0; overflow: hidden; }
+        .page-content > * + * { margin-top: 16px; }
+        .page-footer {
+            flex-shrink: 0;
+            margin-top: auto;
+            padding-top: 4mm;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 8.5pt;
+            color: #64748b;
+            border-top: 1px solid #e2e8f0;
+        }
+        @media print {
+            *, *::before, *::after {
+                box-shadow: none !important;
+                text-shadow: none !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            body { padding: 0; background: none; }
+            .page {
+                margin: 0;
+                border: none;
+                height: 297mm;
+                break-after: page;
+                page-break-after: always;
+            }
+            .page:last-child { break-after: auto; page-break-after: auto; }
+        }
+        [contenteditable]:focus { outline: none; }
+        .header-title {
+            border-bottom: 2px solid #2563eb;
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+        }
+        .header-title h1 { font-size: 18pt; color: #0f172a; margin: 0; }
+        .header-title p { font-size: 9.5pt; color: #64748b; margin: 4px 0 0 0; }
+        .step-card {
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            padding: 10px;
+            background-color: #f8fafc;
+        }
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+        .badge {
+            font-size: 8pt;
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #ffffff;
+            text-transform: uppercase;
+        }
+        .badge-get { background-color: #0d9488; }
+        .badge-post { background-color: #16a34a; }
+        .badge-put { background-color: #d97706; }
+        .badge-delete { background-color: #dc2626; }
+        .badge-sql { background-color: #475569; }
+        .status-badge {
+            font-size: 8pt;
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: auto;
+        }
+        .status-200 { background-color: #dcfce7; color: #166534; border: 1px solid #86efac; }
+        .status-201 { background-color: #dbeafe; color: #1e40af; border: 1px solid #93c5fd; }
+        .status-204 { background-color: #e0e7ff; color: #3730a3; border: 1px solid #a5b4fc; }
+        .status-409 { background-color: #ffedd5; color: #9a3412; border: 1px solid #fdba74; }
+        .status-ok { background-color: #f1f5f9; color: #334155; border: 1px solid #cbd5e1; }
+        .step-title { font-size: 11pt; font-weight: 600; color: #1e293b; margin: 0; }
+        .step-desc { font-size: 9pt; color: #475569; margin: 0 0 8px 0; }
+        .img-container {
+            width: 100%;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+            overflow: hidden;
+            background-color: #000;
+        }
+        .img-container img { width: 100%; height: auto; display: block; }
+    </style>
+</head>
+<body>
+    <div contenteditable="true">
+        <!-- PÁGINA 1 -->
+        <section class="page">
+            <div class="page-content">
+                <div class="header-title">
+                    <h1>Relatório de Execução - API de Contatos</h1>
+                    <p>Persistência de dados com Spring Data JPA e MySQL</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-header"><span class="badge badge-post">POST</span><h2 class="step-title">1. Criar contato persistido (post-1)</h2><span class="status-badge status-201">201 Created</span></div>
+                    <p class="step-desc">A API recebe o contato Ana e retorna o identificador gerado pelo banco. O registro é salvo na tabela <code>contatos</code>.</p>
+                    <div class="img-container"><img src="post-1.png" alt="POST criando contato com resposta 201"></div>
+                </div>
+                <div class="step-card">
+                    <div class="step-header"><span class="badge badge-post">POST</span><h2 class="step-title">2. Tentativa de duplicidade (post-2-error)</h2><span class="status-badge status-409">409 Conflict</span></div>
+                    <p class="step-desc">Telefone e e-mail já cadastrados violam as restrições de unicidade. O tratamento retorna <code>409 Conflict</code>.</p>
+                    <div class="img-container"><img src="post-2-error.png" alt="POST duplicado retornando 409"></div>
+                </div>
+            </div>
+            <footer class="page-footer"><span>API Contatos - Relatório de Persistência</span><span>Página 1 de 6</span></footer>
+        </section>
+
+        <!-- PÁGINA 2 -->
+        <section class="page">
+            <div class="page-content">
+                <div class="step-card">
+                    <div class="step-header"><span class="badge badge-get">GET</span><h2 class="step-title">3. Listar contatos persistidos (get-list-1)</h2><span class="status-badge status-200">200 OK</span></div>
+                    <p class="step-desc">A listagem recupera os registros armazenados no MySQL, demonstrando a persistência fora da memória da aplicação.</p>
+                    <div class="img-container"><img src="get-list-1.png" alt="GET listando contatos persistidos"></div>
+                </div>
+                <div class="step-card">
+                    <div class="step-header"><span class="badge badge-sql">SQL</span><h2 class="step-title">4. Banco e tabela confirmados (mysql-1)</h2><span class="status-badge status-ok">Persistido</span></div>
+                    <p class="step-desc">O MySQL confirma o uso do banco <code>gerenciamento_contatos</code>, a existência da tabela <code>contatos</code> e o registro gravado.</p>
+                    <div class="img-container"><img src="mysql-1.png" alt="Banco e tabela de contatos no MySQL"></div>
+                </div>
+            </div>
+            <footer class="page-footer"><span>API Contatos - Relatório de Persistência</span><span>Página 2 de 6</span></footer>
+        </section>
+
+        <!-- PÁGINA 3 -->
+        <section class="page">
+            <div class="page-content">
+                <div class="step-card">
+                    <div class="step-header"><span class="badge badge-post">POST</span><h2 class="step-title">5. Segundo contato persistido (post-3)</h2><span class="status-badge status-201">201 Created</span></div>
+                    <p class="step-desc">Um novo contato é aceito com telefone e e-mail diferentes. O banco gera outro <code>id</code> automaticamente.</p>
+                    <div class="img-container"><img src="post-3.png" alt="POST criando segundo contato"></div>
+                </div>
+                <div class="step-card">
+                    <div class="step-header"><span class="badge badge-sql">SQL</span><h2 class="step-title">6. Dois registros persistidos (mysql-2)</h2><span class="status-badge status-ok">Conforme</span></div>
+                    <p class="step-desc">A consulta <code>SELECT * FROM contatos</code> mostra os dois registros gravados com seus identificadores e dados.</p>
+                    <div class="img-container"><img src="mysql-2.png" alt="Dois registros persistidos no MySQL"></div>
+                </div>
+            </div>
+            <footer class="page-footer"><span>API Contatos - Relatório de Persistência</span><span>Página 3 de 6</span></footer>
+        </section>
+
+        <!-- PÁGINA 4 -->
+        <section class="page">
+            <div class="page-content">
+                <div class="step-card">
+                    <div class="step-header"><span class="badge badge-delete">DELETE</span><h2 class="step-title">7. Remover contato (delete-1)</h2><span class="status-badge status-204">204 No Content</span></div>
+                    <p class="step-desc">A API remove o contato indicado e retorna <code>204 No Content</code>, sem corpo de resposta.</p>
+                    <div class="img-container"><img src="delete-1.png" alt="DELETE removendo contato com 204"></div>
+                </div>
+                <div class="step-card">
+                    <div class="step-header"><span class="badge badge-sql">SQL</span><h2 class="step-title">8. Tabela após remoção (mysql-3-delet)</h2><span class="status-badge status-ok">Persistido</span></div>
+                    <p class="step-desc">A consulta posterior confirma que o registro removido não permanece no banco de dados.</p>
+                    <div class="img-container"><img src="mysql-3-delet.png" alt="Consulta MySQL após remoção"></div>
+                </div>
+            </div>
+            <footer class="page-footer"><span>API Contatos - Relatório de Persistência</span><span>Página 4 de 6</span></footer>
+        </section>
+
+        <!-- PÁGINA 5 -->
+        <section class="page">
+            <div class="page-content">
+                <div class="header-title">
+                    <h1>Atualização do contato</h1>
+                    <p>Alteração realizada pela API com Spring Data JPA</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-header"><span class="badge badge-put">PUT</span><h2 class="step-title">9. Atualizar contato (put-1)</h2><span class="status-badge status-200">200 OK</span></div>
+                    <p class="step-desc">Os dados do contato de id <code>1</code> são atualizados e a resposta confirma os novos valores persistidos.</p>
+                    <div class="img-container"><img src="put-1.png" alt="PUT atualizando contato"></div>
+                </div>
+            </div>
+            <footer class="page-footer"><span>API Contatos - Relatório de Persistência</span><span>Página 5 de 6</span></footer>
+        </section>
+
+        <!-- PÁGINA 6 -->
+        <section class="page">
+            <div class="page-content">
+                <div class="header-title">
+                    <h1>Confirmação final</h1>
+                    <p>Atualização persistida na base gerenciamento_contatos</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-header"><span class="badge badge-sql">SQL</span><h2 class="step-title">10. Conferir atualização (mysql-4-put)</h2><span class="status-badge status-ok">Persistido</span></div>
+                    <p class="step-desc">A consulta no MySQL confirma que a alteração realizada pela API foi gravada na tabela <code>contatos</code>.</p>
+                    <div class="img-container"><img src="mysql-4-put.png" alt="Consulta MySQL após atualização"></div>
+                </div>
+                <div class="step-card">
+                    <div class="step-header"><span class="badge badge-sql">SQL</span><h2 class="step-title">Resultado da execução</h2><span class="status-badge status-ok">Aprovado</span></div>
+                    <p class="step-desc">A sequência confirma a integração entre Spring Boot, Spring Data JPA e MySQL: criação, consulta, unicidade, remoção e atualização foram verificadas.</p>
+                </div>
+            </div>
+            <footer class="page-footer"><span>API Contatos - Relatório de Persistência</span><span>Página 6 de 6</span></footer>
+        </section>
+    </div>
+</body>
+</html>

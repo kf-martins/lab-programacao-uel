@@ -7,3 +7,8 @@ bin/
 #lib
 
 lib/
+
+target/
+.idea/
+.vscode/
+*.iml

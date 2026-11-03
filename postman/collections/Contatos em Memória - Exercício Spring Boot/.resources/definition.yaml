@@ -1,0 +1,5 @@
+$kind: collection
+description: "Testa os cinco endpoints da atividade. Execute as requisições na ordem: POST, GET lista, GET por índice, PUT e DELETE."
+variables:
+  baseUrl: http://localhost:8080
+  indice: "0"

@@ -33,7 +33,7 @@ As atividades deste repositório reúnem exercícios e projetos desenvolvidos ao
 
 As principais tecnologias utilizadas na disciplina incluem:
 
-* Java
+* Java 25 (LTS)
 * Spring Boot
 * HTML
 * CSS
@@ -43,6 +43,6 @@ As principais tecnologias utilizadas na disciplina incluem:
 
 ## Como executar
 
-Os projetos podem possuir diferentes formas de execução dependendo da tecnologia utilizada. Para projetos Java, é necessário ter o **JDK** instalado. Projetos web e React Native podem exigir ferramentas adicionais, como **Node.js** e gerenciadores de pacotes.
+Os projetos podem possuir diferentes formas de execução dependendo da tecnologia utilizada. Para os projetos Java, utilize o **JDK 25 (LTS)** e Maven quando indicado pelo projeto. Projetos web e React Native podem exigir ferramentas adicionais, como **Node.js** e gerenciadores de pacotes.
 
 Consulte as instruções específicas de cada atividade ou projeto para obter os comandos necessários para execução.

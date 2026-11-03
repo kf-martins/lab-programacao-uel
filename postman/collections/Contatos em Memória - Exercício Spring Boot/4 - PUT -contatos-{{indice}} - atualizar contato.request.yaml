@@ -1,0 +1,19 @@
+$kind: http-request
+name: 4 - PUT /contatos/{{indice}} - atualizar contato
+url: "{{baseUrl}}/contatos/{{indice}}"
+method: PUT
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: '{"nome":"Ana Martins","telefone":"43988887777","email":"ana.martins@exemplo.com","endereco":"Avenida Atualizada, 200","dataNascimento":"2000-01-01"}'
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Contato atualizado (HTTP 200 ou 204)', function () { pm.expect(pm.response.code).to.be.oneOf([200, 204]); });
+      if (pm.response.code === 200) {
+        pm.test('Nome atualizado corretamente', function () { pm.expect(pm.response.json().nome).to.eql('Ana Martins'); });
+      }
+    language: text/javascript
+settings: {}
+order: 4000

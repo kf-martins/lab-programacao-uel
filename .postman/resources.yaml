@@ -1,0 +1,8 @@
+workspace:
+  id: 01bfd3fb-3947-41f8-88ba-83cc7a224edb
+localResources:
+  collections:
+    - ../exercicios/4. Tratamento de Erros com ResponseEntity/ContatosMemoria/postman/Contatos em Memória - ResponseEntity e tratamento de erros
+cloudResources:
+  collections:
+    ../postman/collections/Contatos em Memória - Exercício Spring Boot: 59199196-8464b1d7-e45d-4440-8c85-2f46ef112c72

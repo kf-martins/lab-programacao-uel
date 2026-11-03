@@ -1,0 +1,10 @@
+$kind: http-request
+name: 5 - DELETE /contatos/{{indice}} - remover contato
+url: "{{baseUrl}}/contatos/{{indice}}"
+method: DELETE
+scripts:
+  - type: afterResponse
+    code: pm.test('Contato removido (HTTP 200 ou 204)', function () { pm.expect(pm.response.code).to.be.oneOf([200, 204]); });
+    language: text/javascript
+settings: {}
+order: 5000

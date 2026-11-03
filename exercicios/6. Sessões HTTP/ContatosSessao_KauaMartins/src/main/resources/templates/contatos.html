@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Contatos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-body-tertiary">
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+        <a class="navbar-brand" th:href="@{/contatos}">Contatos</a>
+        <div class="d-flex align-items-center gap-3">
+            <span class="navbar-text text-white" th:text="|Olá, ${usuario.nome}!|">Olá!</span>
+            <a class="btn btn-outline-light btn-sm" th:href="@{/favoritos}">Meus favoritos</a>
+            <a class="btn btn-light btn-sm" th:href="@{/logout}">Sair</a>
+        </div>
+    </div>
+</nav>
+
+<main class="container py-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+        <div>
+            <h1 class="h3 mb-1">Todos os contatos</h1>
+            <p class="text-secondary mb-0">Marque ou desmarque contatos como favoritos. Os favoritos ficam na sua sessão.</p>
+        </div>
+        <a class="btn btn-success" th:href="@{/contatos/novo}">Novo contato</a>
+    </div>
+
+    <div th:if="${sucesso != null}" class="alert alert-success" role="alert" th:text="${sucesso}"></div>
+    <div th:if="${erro != null}" class="alert alert-warning" role="alert" th:text="${erro}"></div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                <tr>
+                    <th>Nome</th>
+                    <th>Telefone</th>
+                    <th>E-mail</th>
+                    <th>Endereço</th>
+                    <th>Nascimento</th>
+                    <th class="text-end">Ações</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="contato : ${contatos}">
+                    <td class="fw-semibold" th:text="${contato.nome}">Nome</td>
+                    <td th:text="${contato.telefone}">Telefone</td>
+                    <td th:text="${contato.email}">E-mail</td>
+                    <td th:text="${contato.endereco != null ? contato.endereco : '-'}">Endereço</td>
+                    <td th:text="${contato.dataNascimento != null ? #temporals.format(contato.dataNascimento, 'dd/MM/yyyy') : '-'}">Data</td>
+                    <td class="text-end">
+                        <div class="d-flex justify-content-end gap-2">
+                        <a class="btn btn-sm btn-outline-secondary"
+                           th:href="@{/contatos/{id}/editar(id=${contato.id})}">Editar</a>
+                        <form th:action="@{/contatos/{id}/favoritar(id=${contato.id})}" method="post">
+                            <button type="submit" class="btn btn-sm"
+                                    th:classappend="${favoritos.contains(contato.id)} ? 'btn-warning' : 'btn-outline-primary'"
+                                    th:text="${favoritos.contains(contato.id)} ? 'Desfavoritar' : 'Favoritar'">
+                                Favoritar
+                            </button>
+                        </form>
+                        <form th:action="@{/contatos/{id}/excluir(id=${contato.id})}" method="post"
+                              onsubmit="return confirm('Deseja remover este contato?');">
+                            <button type="submit" class="btn btn-sm btn-outline-danger">Excluir</button>
+                        </form>
+                        </div>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(contatos)}">
+                    <td colspan="6" class="text-center text-secondary py-4">Nenhum contato cadastrado.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+</body>
+</html>

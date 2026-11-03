@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Relatório de Testes - Tratamento de Erros</title>
+    <style>
+        @page { margin: 0; }
+        *, *::before, *::after { box-sizing: border-box; }
+        html, body { margin: 0; padding: 0; }
+        html { background-color: #ffffff; }
+        @media (prefers-color-scheme: dark) {
+            html { background-color: #1f1f1f; }
+        }
+        body {
+            padding: 24px 0;
+            margin: 0 auto;
+            max-width: 900px !important;
+            border: none !important;
+            background: transparent !important;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: #1e293b;
+        }
+        .page {
+            height: 297mm;
+            margin: 0 auto 12px auto;
+            padding: 18mm 18mm 12mm 18mm;
+            background-color: #ffffff;
+            border: 1px solid rgba(0, 0, 0, 0.12);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+        @media screen and (max-width: 600px) {
+            body { padding: 16px 0; }
+            .page { margin: 0 auto 8px auto; border: none; padding: 12px 20px; }
+        }
+        .page-content {
+            flex: 1 1 0;
+            min-height: 0;
+            overflow: hidden;
+        }
+        .page-content > * + * { margin-top: 16px; }
+        .page-content > :is(h1, h2, h3, h4) + * { margin-top: 8px; }
+        .page-footer {
+            flex-shrink: 0;
+            margin-top: auto;
+            padding-top: 4mm;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 8.5pt;
+            color: #64748b;
+            border-top: 1px solid #e2e8f0;
+        }
+        @media print {
+            *, *::before, *::after {
+                box-shadow: none !important;
+                text-shadow: none !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            body { padding: 0; background: none; }
+            .page {
+                margin: 0;
+                border: none;
+                height: 297mm;
+                break-after: page;
+                page-break-after: always;
+            }
+            .page:last-child { break-after: auto; page-break-after: auto; }
+        }
+        [contenteditable]:focus { outline: none; }
+
+        .header-title {
+            border-bottom: 2px solid #ef4444;
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+        }
+        .header-title h1 {
+            font-size: 18pt;
+            color: #0f172a;
+            margin: 0;
+        }
+        .header-title p {
+            font-size: 9.5pt;
+            color: #64748b;
+            margin: 4px 0 0 0;
+        }
+        .step-card {
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            padding: 10px;
+            background-color: #f8fafc;
+        }
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+        .badge {
+            font-size: 8pt;
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #ffffff;
+            text-transform: uppercase;
+        }
+        .badge-get { background-color: #0d9488; }
+        .badge-post { background-color: #16a34a; }
+        .badge-delete { background-color: #dc2626; }
+        .status-badge {
+            font-size: 8pt;
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: auto;
+        }
+        .status-400 { background-color: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+        .status-404 { background-color: #fef3c7; color: #92400e; border: 1px solid #fcd34d; }
+        .status-200 { background-color: #dcfce7; color: #166534; border: 1px solid #86efac; }
+        .status-201 { background-color: #dbeafe; color: #1e40af; border: 1px solid #93c5fd; }
+        .status-204 { background-color: #e0e7ff; color: #3730a3; border: 1px solid #a5b4fc; }
+        .step-title {
+            font-size: 11pt;
+            font-weight: 600;
+            color: #1e293b;
+            margin: 0;
+        }
+        .step-desc {
+            font-size: 9pt;
+            color: #475569;
+            margin: 0 0 8px 0;
+        }
+        .img-container {
+            width: 100%;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+            overflow: hidden;
+            background-color: #000;
+        }
+        .img-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div contenteditable="true">
+        <!-- PÁGINA 1 -->
+        <section class="page">
+            <div class="page-content">
+                <div class="header-title">
+                    <h1>Relatório de Testes - Tratamento de Erros</h1>
+                    <p>API de contatos em memória com ResponseEntity (Spring Boot)</p>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-header">
+                        <span class="badge badge-post">POST</span>
+                        <h2 class="step-title">1. Validação: nome nulo (post-1)</h2>
+                        <span class="status-badge status-400">400 Bad Request</span>
+                    </div>
+                    <p class="step-desc">A tentativa de criação com <code>nome: null</code> é rejeitada. O contato não é adicionado e a API retorna a mensagem de validação.</p>
+                    <div class="img-container"><img src="post-1.png" alt="POST com nome nulo retornando 400"></div>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-header">
+                        <span class="badge badge-post">POST</span>
+                        <h2 class="step-title">2. Validação: telefone nulo (post-2)</h2>
+                        <span class="status-badge status-400">400 Bad Request</span>
+                    </div>
+                    <p class="step-desc">A tentativa de criação com <code>telefone: null</code> é rejeitada com <em>"O campo 'telefone' não pode ser nulo ou vazio."</em>.</p>
+                    <div class="img-container"><img src="post-2.png" alt="POST com telefone nulo retornando 400"></div>
+                </div>
+            </div>
+            <footer class="page-footer"><span>API Contatos - Relatório de Testes</span><span>Página 1 de 4</span></footer>
+        </section>
+
+        <!-- PÁGINA 2 -->
+        <section class="page">
+            <div class="page-content">
+                <div class="step-card">
+                    <div class="step-header">
+                        <span class="badge badge-post">POST</span>
+                        <h2 class="step-title">3. Validação: e-mail vazio (post-3)</h2>
+                        <span class="status-badge status-400">400 Bad Request</span>
+                    </div>
+                    <p class="step-desc">A tentativa de criação com <code>email: ""</code> é rejeitada. A regra do exercício exige que o e-mail não seja nulo nem vazio.</p>
+                    <div class="img-container"><img src="post-3.png" alt="POST com email vazio retornando 400"></div>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-header">
+                        <span class="badge badge-post">POST</span>
+                        <h2 class="step-title">4. Criação sem endereço (post-4)</h2>
+                        <span class="status-badge status-201">201 Created</span>
+                    </div>
+                    <p class="step-desc">O endereço é opcional. O contato é criado com sucesso mesmo com <code>endereco: ""</code>; a resposta confirma o status <code>201 Created</code>.</p>
+                    <div class="img-container"><img src="post-4.png" alt="POST válido retornando 201"></div>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-header">
+                        <span class="badge badge-post">POST</span>
+                        <h2 class="step-title">5. Criação sem data de nascimento (post-5)</h2>
+                        <span class="status-badge status-201">201 Created</span>
+                    </div>
+                    <p class="step-desc">A data de nascimento é opcional. O valor vazio é convertido para <code>null</code> e o contato é criado com sucesso.</p>
+                    <div class="img-container"><img src="post-5.png" alt="POST sem data de nascimento retornando 201"></div>
+                </div>
+            </div>
+            <footer class="page-footer"><span>API Contatos - Relatório de Testes</span><span>Página 2 de 4</span></footer>
+        </section>
+
+        <!-- PÁGINA 3 -->
+        <section class="page">
+            <div class="page-content">
+                <div class="step-card">
+                    <div class="step-header">
+                        <span class="badge badge-get">GET</span>
+                        <h2 class="step-title">6. Listagem após as validações (get-list-1)</h2>
+                        <span class="status-badge status-200">200 OK</span>
+                    </div>
+                    <p class="step-desc">A lista contém somente os contatos aceitos. As tentativas inválidas anteriores não alteraram a coleção em memória.</p>
+                    <div class="img-container"><img src="get-list-1.png" alt="GET listando contatos válidos"></div>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-header">
+                        <span class="badge badge-get">GET</span>
+                        <h2 class="step-title">7. Índice inexistente (get-indice-100)</h2>
+                        <span class="status-badge status-404">404 Not Found</span>
+                    </div>
+                    <p class="step-desc">A busca pelo índice <code>100</code> não encontra contato e retorna <em>"Não existe contato no índice 100."</em>.</p>
+                    <div class="img-container"><img src="get-indice-100-erro-404.png" alt="GET de índice inexistente retornando 404"></div>
+                </div>
+            </div>
+            <footer class="page-footer"><span>API Contatos - Relatório de Testes</span><span>Página 3 de 4</span></footer>
+        </section>
+
+        <!-- PÁGINA 4 -->
+        <section class="page">
+            <div class="page-content">
+                <div class="header-title">
+                    <h1>Conclusão dos testes</h1>
+                    <p>Remoção e códigos HTTP observados</p>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-header">
+                        <span class="badge badge-delete">DELETE</span>
+                        <h2 class="step-title">8. Remoção de contato (delete-1)</h2>
+                        <span class="status-badge status-204">204 No Content</span>
+                    </div>
+                    <p class="step-desc">A remoção do contato é concluída com sucesso. Conforme especificado, a resposta <code>204 No Content</code> não possui corpo.</p>
+                    <div class="img-container"><img src="delete-1.png" alt="DELETE retornando 204 sem conteúdo"></div>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-header">
+                        <span class="badge badge-get">GET</span>
+                        <h2 class="step-title">Resultado da verificação</h2>
+                        <span class="status-badge status-200">Conforme</span>
+                    </div>
+                    <p class="step-desc">Os testes documentados confirmam: dados obrigatórios inválidos retornam <strong>400</strong>, índices inexistentes retornam <strong>404</strong>, criações válidas retornam <strong>201</strong>, listagens retornam <strong>200</strong> e remoções válidas retornam <strong>204</strong>.</p>
+                </div>
+            </div>
+            <footer class="page-footer"><span>API Contatos - Relatório de Testes</span><span>Página 4 de 4</span></footer>
+        </section>
+    </div>
+</body>
+</html>

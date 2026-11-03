@@ -1,0 +1,14 @@
+$kind: http-request
+name: 3 - GET /contatos/{{indice}} - buscar contato
+url: "{{baseUrl}}/contatos/0"
+method: GET
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Contato encontrado (HTTP 200)', function () { pm.response.to.have.status(200); });
+      pm.test('Resposta contém campo nome', function () { pm.expect(pm.response.json()).to.have.property('nome'); });
+      pm.test('Resposta contém campo telefone', function () { pm.expect(pm.response.json()).to.have.property('telefone'); });
+      pm.test('Resposta contém campo email', function () { pm.expect(pm.response.json()).to.have.property('email'); });
+    language: text/javascript
+settings: {}
+order: 3000

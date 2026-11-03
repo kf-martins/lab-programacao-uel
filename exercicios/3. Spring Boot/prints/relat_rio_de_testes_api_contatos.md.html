@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Relatório de Testes da API de Contatos</title>
+    <style>
+        @page { margin: 0; }
+        *, *::before, *::after { box-sizing: border-box; }
+        html, body { margin: 0; padding: 0; }
+        html { background-color: #ffffff; }
+        @media (prefers-color-scheme: dark) {
+            html { background-color: #1f1f1f; }
+        }
+        body {
+            padding: 24px 0;
+            margin: 0 auto;
+            max-width: 900px !important;
+            border: none !important;
+            background: transparent !important;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: #1e293b;
+        }
+        .page {
+            height: 297mm;
+            margin: 0 auto 12px auto;
+            padding: 18mm 18mm 12mm 18mm;
+            background-color: #ffffff;
+            border: 1px solid rgba(0, 0, 0, 0.12);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+        @media screen and (max-width: 600px) {
+            body { padding: 16px 0; }
+            .page { margin: 0 auto 8px auto; border: none; padding: 12px 20px; }
+        }
+        .page-content {
+            flex: 1 1 0;
+            min-height: 0;
+            overflow: hidden;
+        }
+        .page-content > * + * {
+            margin-top: 16px;
+        }
+        .page-content > :is(h1, h2, h3, h4) + * {
+            margin-top: 8px;
+        }
+        .page-footer {
+            flex-shrink: 0;
+            margin-top: auto;
+            padding-top: 4mm;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 8.5pt;
+            color: #64748b;
+            border-top: 1px solid #e2e8f0;
+        }
+        @media print {
+            *, *::before, *::after {
+                box-shadow: none !important;
+                text-shadow: none !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            body { padding: 0; background: none; }
+            .page {
+                margin: 0;
+                border: none;
+                height: 297mm;
+                break-after: page;
+                page-break-after: always;
+            }
+            .page:last-child { break-after: auto; page-break-after: auto; }
+        }
+        [contenteditable]:focus { outline: none; }
+
+        /* Estilos Personalizados */
+        .header-title {
+            border-bottom: 2px solid #3b82f6;
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+        }
+        .header-title h1 {
+            font-size: 18pt;
+            color: #0f172a;
+            margin: 0;
+        }
+        .header-title p {
+            font-size: 9.5pt;
+            color: #64748b;
+            margin: 4px 0 0 0;
+        }
+        .step-card {
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            padding: 10px;
+            background-color: #f8fafc;
+        }
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+        .badge {
+            font-size: 8pt;
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #ffffff;
+            text-transform: uppercase;
+        }
+        .badge-get { background-color: #0d9488; }
+        .badge-post { background-color: #16a34a; }
+        .badge-put { background-color: #d97706; }
+        .badge-delete { background-color: #dc2626; }
+        
+        .step-title {
+            font-size: 11pt;
+            font-weight: 600;
+            color: #1e293b;
+            margin: 0;
+        }
+        .step-desc {
+            font-size: 9pt;
+            color: #475569;
+            margin: 0 0 8px 0;
+        }
+        .img-container {
+            width: 100%;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+            overflow: hidden;
+            background-color: #000;
+        }
+        .img-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div contenteditable="true">
+        
+        <!-- PÁGINA 1 -->
+        <!-- page 1 budget (Standard): header 35 + step1 150 + step2 150 + 2 gaps 26 = 361 / 460 words -->
+        <section class="page">
+            <div class="page-content">
+                <div class="header-title">
+                    <h1>Documentação de Testes - API Contatos em Memória</h1>
+                    <p>Sequência de requisições e validação dos endpoints (Spring Boot)</p>
+                </div>
+
+                <!-- 1. GET inicial -->
+                <div class="step-card">
+                    <div class="step-header">
+                        <span class="badge badge-get">GET</span>
+                        <h2 class="step-title">1. Listar Contatos Inicial (get-list)</h2>
+                    </div>
+                    <p class="step-desc">Consulta inicial à coleção de contatos demonstrando a lista vazia [].</p>
+                    <div class="img-container">
+                        <img src="contatos-get-list.png" alt="GET /contatos lista vazia">
+                    </div>
+                </div>
+
+                <!-- 2. POST 1 -->
+                <div class="step-card">
+                    <div class="step-header">
+                        <span class="badge badge-post">POST</span>
+                        <h2 class="step-title">2. Adicionar Primeiro Contato (post-1)</h2>
+                    </div>
+                    <p class="step-desc">Criação do primeiro registro no sistema (Contato: Ana).</p>
+                    <div class="img-container">
+                        <img src="contatos-post.png" alt="POST /contatos primeiro contato">
+                    </div>
+                </div>
+            </div>
+            <footer class="page-footer">
+                <span>API Contatos - Relatório de Testes</span>
+                <span>Página 1 de 4</span>
+            </footer>
+        </section>
+
+        <!-- PÁGINA 2 -->
+        <!-- page 2 budget (Standard): step3 150 + step4 150 + 1 gap 13 = 313 / 460 words -->
+        <section class="page">
+            <div class="page-content">
+                <!-- 3. POST 2 -->
+                <div class="step-card">
+                    <div class="step-header">
+                        <span class="badge badge-post">POST</span>
+                        <h2 class="step-title">3. Adicionar Segundo Contato (post-2)</h2>
+                    </div>
+                    <p class="step-desc">Inserção do segundo registro na memória (Contato: Teste).</p>
+                    <div class="img-container">
+                        <img src="contatos-post-2.png" alt="POST /contatos segundo contato">
+                    </div>
+                </div>
+
+                <!-- 4. GET list 2 -->
+                <div class="step-card">
+                    <div class="step-header">
+                        <span class="badge badge-get">GET</span>
+                        <h2 class="step-title">4. Listar Contatos Atualizada (get-list-2)</h2>
+                    </div>
+                    <p class="step-desc">Validação da listagem contendo os dois contatos recém-adicionados.</p>
+                    <div class="img-container">
+                        <img src="constatos-get-list-2.png" alt="GET /contatos lista com dois itens">
+                    </div>
+                </div>
+            </div>
+            <footer class="page-footer">
+                <span>API Contatos - Relatório de Testes</span>
+                <span>Página 2 de 4</span>
+            </footer>
+        </section>
+
+        <!-- PÁGINA 3 -->
+        <!-- page 3 budget (Standard): step5 150 + step6 150 + 1 gap 13 = 313 / 460 words -->
+        <section class="page">
+            <div class="page-content">
+                <!-- 5. GET por índice -->
+                <div class="step-card">
+                    <div class="step-header">
+                        <span class="badge badge-get">GET</span>
+                        <h2 class="step-title">5. Buscar Contato por Índice (get-indice)</h2>
+                    </div>
+                    <p class="step-desc">Consulta específica filtrando o contato armazenado no índice 0.</p>
+                    <div class="img-container">
+                        <img src="contatos-get-indice.png" alt="GET /contatos/{indice}">
+                    </div>
+                </div>
+
+                <!-- 6. PUT 0 -->
+                <div class="step-card">
+                    <div class="step-header">
+                        <span class="badge badge-put">PUT</span>
+                        <h2 class="step-title">6. Atualizar Contato no Índice 0 (put-0)</h2>
+                    </div>
+                    <p class="step-desc">Atualização dos dados cadastrais do contato no índice 0 (Ana Martins).</p>
+                    <div class="img-container">
+                        <img src="contatos-put-0.png" alt="PUT /contatos/{indice}">
+                    </div>
+                </div>
+            </div>
+            <footer class="page-footer">
+                <span>API Contatos - Relatório de Testes</span>
+                <span>Página 3 de 4</span>
+            </footer>
+        </section>
+
+        <!-- PÁGINA 4 -->
+        <!-- page 4 budget (Standard): step7 130 + step8 130 + step9 130 + 2 gaps 26 = 416 / 460 words -->
+        <section class="page">
+            <div class="page-content">
+                <!-- 7. GET list 3 -->
+                <div class="step-card">
+                    <div class="step-header">
+                        <span class="badge badge-get">GET</span>
+                        <h2 class="step-title">7. Listar Contatos Após Edição (get-list-3)</h2>
+                    </div>
+                    <p class="step-desc">Confirmação das alterações realizadas via PUT na lista completa.</p>
+                    <div class="img-container">
+                        <img src="contatos-get-list-3.png" alt="GET /contatos com dados atualizados">
+                    </div>
+                </div>
+
+                <!-- 8. DELETE 1 -->
+                <div class="step-card">
+                    <div class="step-header">
+                        <span class="badge badge-delete">DELETE</span>
+                        <h2 class="step-title">8. Remover Contato no Índice 1 (delete-1)</h2>
+                    </div>
+                    <p class="step-desc">Execução da remoção do elemento no índice 1.</p>
+                    <div class="img-container">
+                        <img src="cotnato-delete-1.png" alt="DELETE /contatos/{indice}">
+                    </div>
+                </div>
+
+                <!-- 9. GET list 4 -->
+                <div class="step-card">
+                    <div class="step-header">
+                        <span class="badge badge-get">GET</span>
+                        <h2 class="step-title">9. Listar Contatos Final (get-list-4)</h2>
+                    </div>
+                    <p class="step-desc">Verificação final da lista de contatos após a exclusão efetuada.</p>
+                    <div class="img-container">
+                        <img src="contato-get-list-4.png" alt="GET /contatos lista final">
+                    </div>
+                </div>
+            </div>
+            <footer class="page-footer">
+                <span>API Contatos - Relatório de Testes</span>
+                <span>Página 4 de 4</span>
+            </footer>
+        </section>
+
+    </div>
+</body>
+</html>

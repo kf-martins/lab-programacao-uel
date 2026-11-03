@@ -1,0 +1,26 @@
+$kind: http-request
+name: 1 - POST /contatos - adicionar contato
+url: "{{baseUrl}}/contatos"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+        "nome": "Teste",
+        "telefone": "43999990099",
+        "email": "Teste@exemplo.com",
+        "endereco": "Rua Exemplo, 100",
+        "dataNascimento": "2000-01-01"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Contato criado (HTTP 201)', function () { pm.response.to.have.status(201); });
+      const location = pm.response.headers.get('Location');
+      if (location) { pm.collectionVariables.set('indice', location.substring(location.lastIndexOf('/') + 1)); }
+      pm.test('Header Location presente', function () { pm.expect(pm.response.headers.get('Location')).to.not.be.undefined; });
+    language: text/javascript
+settings: {}
+order: 1000
