@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#100b18">
+  <title>TaskFlow — Gerenciador de tarefas</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #100b18;
+      --surface: #191224;
+      --surface-2: #21182f;
+      --surface-3: #2b1d3d;
+      --purple: #a879ff;
+      --purple-light: #c6a7ff;
+      --purple-dark: #7441c8;
+      --text: #f4efff;
+      --muted: #a99bbd;
+      --border: rgba(190, 153, 255, .16);
+      --danger: #ff7297;
+      --success: #80e0b2;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      padding: 48px 20px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      background:
+        radial-gradient(ellipse at 15% 5%, rgba(116, 65, 200, .20), transparent 38%),
+        radial-gradient(ellipse at 90% 85%, rgba(168, 121, 255, .12), transparent 35%),
+        var(--bg);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    button, input { font: inherit; }
+
+    .app {
+      width: min(100%, 720px);
+      animation: app-enter .7s cubic-bezier(.2,.8,.2,1) both;
+    }
+
+    .topline {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 24px;
+      color: var(--purple-light);
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    .topline::before {
+      content: "";
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--purple);
+      box-shadow: 0 0 16px var(--purple);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 6vw, 3rem);
+      letter-spacing: -.055em;
+      line-height: 1.05;
+    }
+
+    .subtitle {
+      margin: 12px 0 30px;
+      color: var(--muted);
+      font-size: .98rem;
+    }
+
+    .panel {
+      padding: 24px;
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      background: linear-gradient(145deg, rgba(33, 24, 47, .96), rgba(25, 18, 36, .96));
+      box-shadow: 0 24px 70px rgba(0, 0, 0, .28), inset 0 1px rgba(255,255,255,.025);
+    }
+
+    .input-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    #inputTarefa {
+      min-width: 0;
+      flex: 1;
+      padding: 15px 17px;
+      color: var(--text);
+      background: #120d1b;
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s, background .2s;
+    }
+
+    #inputTarefa::placeholder { color: #766a87; }
+    #inputTarefa:focus {
+      border-color: var(--purple);
+      background: #160f21;
+      box-shadow: 0 0 0 4px rgba(168, 121, 255, .12);
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+      transition: background .2s ease, color .2s ease, border-color .2s ease,
+                  transform .2s ease, box-shadow .2s ease;
+    }
+
+    button:focus-visible, input:focus-visible {
+      outline: 2px solid var(--purple-light);
+      outline-offset: 3px;
+    }
+
+    .add-button {
+      padding: 0 20px;
+      border-radius: 13px;
+      color: #180f25;
+      background: var(--purple-light);
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .add-button:hover {
+      background: #dfccff;
+      box-shadow: 0 8px 24px rgba(168, 121, 255, .25);
+      transform: translateY(-2px);
+    }
+
+    .add-button:active, .task-button:active, .filter-button:active {
+      transform: scale(.96);
+    }
+
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin: 26px 0 17px;
+    }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .filter-button {
+      padding: 9px 13px;
+      border: 1px solid transparent;
+      border-radius: 10px;
+      color: var(--muted);
+      background: transparent;
+      font-size: .86rem;
+      font-weight: 650;
+    }
+
+    .filter-button:hover {
+      color: var(--purple-light);
+      background: rgba(168, 121, 255, .10);
+      border-color: var(--border);
+    }
+
+    .filter-button.active {
+      color: var(--purple-light);
+      background: rgba(168, 121, 255, .15);
+      border-color: rgba(168, 121, 255, .28);
+    }
+
+    #contador {
+      margin: 0;
+      color: var(--muted);
+      font-size: .85rem;
+      font-variant-numeric: tabular-nums;
+    }
+
+    #listaTarefas {
+      display: grid;
+      gap: 10px;
+      min-height: 70px;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+
+    .task-item {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      padding: 15px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: rgba(18, 13, 27, .72);
+      transform-origin: center;
+      animation: task-enter .35s cubic-bezier(.2,.8,.2,1) both;
+      transition: border-color .2s, background .2s, transform .2s, opacity .2s;
+    }
+
+    .task-item:hover {
+      border-color: rgba(168, 121, 255, .38);
+      background: rgba(43, 29, 61, .72);
+      transform: translateY(-1px);
+    }
+
+    .task-description {
+      min-width: 0;
+      flex: 1;
+      overflow-wrap: anywhere;
+      line-height: 1.45;
+      transition: color .2s, opacity .2s;
+    }
+
+    .task-description.completed {
+      color: #82758f;
+      opacity: .8;
+    }
+
+    .task-actions {
+      display: flex;
+      gap: 7px;
+      flex-shrink: 0;
+    }
+
+    .task-button {
+      padding: 8px 10px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      color: var(--purple-light);
+      background: rgba(168, 121, 255, .08);
+      font-size: .78rem;
+      font-weight: 700;
+    }
+
+    .task-button:hover {
+      color: #160e20;
+      border-color: var(--purple-light);
+      background: var(--purple-light);
+      transform: translateY(-1px);
+    }
+
+    .task-button.delete {
+      color: #ff9ab3;
+      background: rgba(255, 114, 151, .07);
+      border-color: rgba(255, 114, 151, .16);
+    }
+
+    .task-button.delete:hover {
+      color: #260d17;
+      background: #ff9ab3;
+      border-color: #ff9ab3;
+    }
+
+    .empty-state {
+      display: grid;
+      place-items: center;
+      gap: 8px;
+      padding: 30px 15px;
+      color: var(--muted);
+      text-align: center;
+      animation: fade-zoom .35s ease both;
+    }
+
+    .empty-icon {
+      display: grid;
+      place-items: center;
+      width: 44px;
+      height: 44px;
+      margin-bottom: 3px;
+      border-radius: 14px;
+      color: var(--purple-light);
+      background: rgba(168, 121, 255, .12);
+      font-size: 1.25rem;
+    }
+
+    .empty-state strong { color: var(--text); font-size: .95rem; }
+    .empty-state span { font-size: .84rem; }
+
+    .footer-note {
+      margin: 19px 2px 0;
+      color: #746982;
+      font-size: .76rem;
+      text-align: center;
+    }
+
+    .removing {
+      pointer-events: none;
+      animation: task-exit .24s ease forwards;
+    }
+
+    @keyframes app-enter {
+      from { opacity: 0; transform: translateY(18px) scale(.985); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes task-enter {
+      from { opacity: 0; transform: translateY(10px) scale(.97); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes task-exit {
+      to { opacity: 0; transform: translateY(-7px) scale(.94); }
+    }
+
+    @keyframes fade-zoom {
+      from { opacity: 0; transform: scale(.96); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @media (max-width: 540px) {
+      body { padding: 30px 14px; }
+      .panel { padding: 17px; border-radius: 18px; }
+      .input-row { flex-direction: column; }
+      .add-button { min-height: 47px; }
+      .toolbar { align-items: flex-start; flex-direction: column; }
+      .task-item { align-items: flex-start; flex-wrap: wrap; }
+      .task-description { flex-basis: calc(100% - 5px); }
+      .task-actions { margin-left: auto; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <div class="topline">Organização pessoal</div>
+    <h1>Suas tarefas,<br>em um só lugar.</h1>
+    <p class="subtitle">Organize o que precisa ser feito. Um passo de cada vez.</p>
+
+    <section class="panel" aria-label="Gerenciador de tarefas">
+      <form class="input-row" id="formTarefa">
+        <input
+          type="text"
+          id="inputTarefa"
+          placeholder="O que você precisa fazer?"
+          autocomplete="off"
+          aria-label="Descrição da tarefa"
+        >
+        <button type="submit" id="botaoAdicionar" class="add-button">＋ Adicionar</button>
+      </form>
+
+      <div class="toolbar">
+        <nav class="filters" aria-label="Filtrar tarefas">
+          <button type="button" id="filtroTodas" class="filter-button active" aria-pressed="true">Todas</button>
+          <button type="button" id="filtroAtivas" class="filter-button" aria-pressed="false">Ativas</button>
+          <button type="button" id="filtroConcluidas" class="filter-button" aria-pressed="false">Concluídas</button>
+        </nav>
+        <p id="contador" aria-live="polite">0 ativas de 0 tarefas</p>
+      </div>
+
+      <ul id="listaTarefas" aria-live="polite"></ul>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
